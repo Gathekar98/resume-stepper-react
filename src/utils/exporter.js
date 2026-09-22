@@ -1,61 +1,23 @@
 import { range } from "./range.js";
 
 export function renderStandaloneHTML(data) {
-  const esc = (s) =>
-    String(s || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-
+  const esc = (s) => String(s || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
   const p = data.personal;
+  const contact = [p.location, p.phone, p.email, p.website].filter(Boolean).join(" · ");
+  const section = (title, content) => content ? `<section class="section"><div class="section-heading"><h2>${title}</h2><span></span></div>${content}</section>` : "";
+  const summary = data.summary.about ? `<p class="summary-copy">${esc(data.summary.about).replaceAll("\n", "<br>")}</p>` : "";
+  const experience = (data.experience || []).length ? `<div class="entries">${data.experience.map((e) => `
+      <article class="entry"><div class="entry-topline"><div><h3>${esc(e.role || "Role")}</h3><p class="institution">${esc(e.company || "Company")}</p></div><p class="date">${esc(range(e.start, e.end))}</p></div>${e.location ? `<p class="location">${esc(e.location)}</p>` : ""}${(e.bullets || []).filter(Boolean).length ? `<ul>${e.bullets.filter(Boolean).map((b) => `<li>${esc(b)}</li>`).join("")}</ul>` : ""}</article>`).join("")}</div>` : "";
+  const education = (data.education || []).length ? `<div class="entries compact">${data.education.map((ed) => `
+      <article class="entry"><div class="entry-topline"><div><h3>${esc(ed.school || "School")}</h3><p class="institution">${esc([ed.degree, ed.field].filter(Boolean).join(" · "))}</p></div><p class="date">${esc(range(ed.start, ed.end))}</p></div>${ed.details ? `<p class="details">${esc(ed.details)}</p>` : ""}</article>`).join("")}</div>` : "";
+  const skills = (data.skills.core?.length || data.skills.tools?.length) ? `<div class="skills-grid">${data.skills.core?.length ? `<div><p class="skill-label">Core expertise</p><p>${esc(data.skills.core.join(" · "))}</p></div>` : ""}${data.skills.tools?.length ? `<div><p class="skill-label">Tools & technology</p><p>${esc(data.skills.tools.join(" · "))}</p></div>` : ""}</div>` : "";
 
-  const lines = [
-    "<!doctype html>",
-    '<html lang="en">',
-    "<head>",
-    '  <meta charset="utf-8"/>',
-    '  <meta name="viewport" content="width=device-width, initial-scale=1"/>',
-    `  <title>${esc(p.fullName || "Resume")}</title>`,
+  return [
+    "<!doctype html>", '<html lang="en">', "<head>", '  <meta charset="utf-8"/>', '  <meta name="viewport" content="width=device-width, initial-scale=1"/>', `  <title>${esc(p.fullName || "Resume")}</title>`,
+    '  <link rel="preconnect" href="https://fonts.googleapis.com">', '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>', '  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">',
     "  <style>",
-    "   :root{--ink:#111;--muted:#555;--rule:#ddd;}",
-    "   *{box-sizing:border-box;}body{font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);margin:0;background:#fff;padding:32px;}",
-    "   h1{font-size:28px;margin:0 0 4px} h2{font-size:16px;margin:24px 0 8px} .muted{color:var(--muted)} hr{border:0;border-top:1px solid var(--rule);margin:16px 0}",
-    "   .section{margin-top:16px}",
-    "   ul{margin:8px 0 0 18px}",
-    "   @media print{ body{padding:0} }",
-    "  </style>",
-    "</head>",
-    "<body>",
-    "  <header>",
-    `    <h1>${esc(p.fullName || "Your Name")}</h1>`,
-    `    <div class="muted">${esc([p.location, p.phone, p.email, p.website].filter(Boolean).join(" · "))}</div>`,
-    "  </header>",
-    data.summary.about
-      ? `<section class="section"><h2>Summary</h2><div>${esc(data.summary.about).replaceAll("\n","<br>")}</div></section>`
-      : "",
-    (data.experience || []).length
-      ? `<section class="section"><h2>Experience</h2>${data.experience.map(e=>`
-          <div><strong>${esc(e.role||"Role")} — ${esc(e.company||"Company")}</strong>
-          <div class="muted">${esc([e.location, range(e.start,e.end)].filter(Boolean).join(" · "))}</div>
-          ${(e.bullets||[]).filter(Boolean).length?`<ul>${
-            e.bullets.filter(Boolean).map(b=>`<li>${esc(b)}</li>`).join("")
-          }</ul>`:""}</div>
-        `).join("")}</section>`
-      : "",
-    (data.education || []).length
-      ? `<section class="section"><h2>Education</h2>${data.education.map(ed=>`
-          <div><strong>${esc(ed.school||"School")}</strong>
-          <div class="muted">${esc([ed.degree, ed.field, range(ed.start, ed.end)].filter(Boolean).join(" · "))}</div>
-          ${ed.details?`<div>${esc(ed.details)}</div>`:""}</div>
-        `).join("")}</section>`
-      : "",
-    (data.skills.core?.length || data.skills.tools?.length)
-      ? `<section class="section"><h2>Skills</h2>${
-          data.skills.core?.length?`<div><strong>Core:</strong> ${esc(data.skills.core.join(", "))}</div>`:""
-        }${
-          data.skills.tools?.length?`<div><strong>Tools / Tech:</strong> ${esc(data.skills.tools.join(", "))}</div>`:""
-        }</section>`
-      : "",
-    "</body>",
-    "</html>",
-  ];
-
-  return lines.join("\n");
+    "    :root{--ink:#1d292d;--muted:#6d7674;--gold:#b38a43;--paper:#fdfcf8;--rule:#dfd6c2}*{box-sizing:border-box}body{margin:0;background:#e9e5db;color:var(--ink);font:14px/1.6 'DM Sans',Arial,sans-serif;padding:48px 20px}.page{position:relative;max-width:850px;margin:auto;background:var(--paper);padding:66px 76px 72px;box-shadow:0 18px 55px rgba(34,35,30,.17);overflow:hidden}.page::before{content:'';position:absolute;top:0;left:0;right:0;height:7px;background:linear-gradient(90deg,#8e6b30,#d4b777,#8e6b30)}.monogram{display:grid;place-items:center;width:38px;height:38px;border:1px solid var(--gold);border-radius:50%;color:var(--gold);font:20px 'Playfair Display',Georgia,serif;margin-bottom:20px}.kicker,.skill-label{color:var(--gold);font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin:0}h1,h2,h3,p{margin-top:0}h1,h2,h3{font-family:'Playfair Display',Georgia,serif}h1{font-size:42px;line-height:1.06;letter-spacing:-.035em;margin-bottom:11px}.contact{color:var(--muted);font-size:13px;letter-spacing:.01em}.section{margin-top:34px}.section-heading{display:flex;align-items:center;gap:15px;margin-bottom:15px}.section-heading h2{font-size:18px;line-height:1;margin:0;white-space:nowrap}.section-heading span{height:1px;flex:1;background:var(--rule)}.summary-copy{max-width:720px;margin:0;color:#344043}.entries{display:grid;gap:24px}.entries.compact{gap:19px}.entry-topline{display:flex;justify-content:space-between;gap:20px}.entry h3{font-size:16px;line-height:1.25;margin:0}.institution{font-size:13px;font-weight:600;color:#4c5857;margin:3px 0 0}.date{font-size:12px;color:var(--gold);font-weight:700;white-space:nowrap;margin:2px 0 0}.location{font-size:12px;color:var(--muted);margin:2px 0 0}.details{font-size:13px;margin:7px 0 0;color:#46504f}ul{margin:10px 0 0;padding-left:18px}li{margin:3px 0;padding-left:3px}li::marker{color:var(--gold)}.skills-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.skills-grid>div{border-left:2px solid var(--gold);padding-left:12px}.skills-grid p:last-child{font-size:13px;margin:6px 0 0;color:#3d4848}@media(max-width:620px){body{padding:0}.page{padding:44px 30px;min-height:100vh;box-shadow:none}.entry-topline{display:block}.date{margin-top:5px}.skills-grid{grid-template-columns:1fr}h1{font-size:34px}}@media print{body{padding:0;background:#fff}.page{max-width:none;box-shadow:none;min-height:100vh}@page{margin:0;size:auto}}",
+    "  </style>", "</head>", "<body><main class=\"page\">", '  <div class="monogram">R</div>', '  <p class="kicker">Curriculum vitae</p>', `  <h1>${esc(p.fullName || "Your Name")}</h1>`, `  ${contact ? `<p class="contact">${esc(contact)}</p>` : ""}`,
+    section("Profile", summary), section("Experience", experience), section("Education", education), section("Selected skills", skills), "</main></body>", "</html>",
+  ].join("\n");
 }
