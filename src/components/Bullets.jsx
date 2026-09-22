@@ -7,7 +7,7 @@ export default function Bullets({ bullets = [], onChange }) {
 
   return (
     <div>
-      <div className="text-sm font-medium mb-2">Key achievements / responsibilities</div>
+      <div className="text-sm font-medium mb-2 text-stone-200">Key achievements / responsibilities</div>
       <div className="space-y-2">
         {bullets.map((b, i) => (
           <div key={i} className="flex gap-2 items-start">
@@ -15,15 +15,15 @@ export default function Bullets({ bullets = [], onChange }) {
               value={b}
               onChange={(e) => setAt(i, e.target.value)}
               placeholder="e.g., Led a 3-member team to deliver…"
-              className="flex-1 px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
+              className="lux-input flex-1 px-3.5 py-2.5"
             />
-            <button className="px-2 py-1 rounded-lg border" onClick={() => remove(i)}>
+            <button className="lux-icon-button px-2.5 py-2.5" onClick={() => remove(i)}>
               Delete
             </button>
           </div>
         ))}
       </div>
-      <button className="mt-2 px-3 py-2 rounded-xl border" onClick={add}>Add bullet</button>
+      <button className="lux-button-secondary mt-3 px-4 py-2.5" onClick={add}>Add bullet</button>
     </div>
   );
 }

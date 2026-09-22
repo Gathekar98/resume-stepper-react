@@ -4,18 +4,18 @@ const cls = (...a) => a.filter(Boolean).join(" ");
 
 export default function Stepper({ steps, step, onGo, validFlags }) {
   return (
-    <ol className="flex flex-wrap gap-2 md:gap-3 mb-6">
+    <ol className="stepper-wrap flex flex-wrap items-center gap-2 md:gap-3 mb-8 pb-7 border-b border-stone-300/10">
       {steps.map((s, i) => (
         <li key={s.id} className="flex items-center">
           <button
             onClick={() => onGo(i)}
             className={cls(
-              "px-3 py-1.5 rounded-full text-sm border",
+              "px-3.5 py-2 rounded-full text-sm border transition-all duration-200",
               i === step
-                ? "bg-purple-100 text-black border-purple-200"
+                ? "bg-[#d8b778] text-[#14212b] border-[#d8b778] shadow-lg shadow-black/20"
                 : validFlags[s.id]
-                ? "bg-green-50 text-green-700 border-green-200"
-                : "bg-white text-purple-700 border-gray-300 hover:border-gray-400"
+                ? "bg-emerald-400/10 text-emerald-200 border-emerald-300/25"
+                : "bg-transparent text-stone-300 border-stone-300/20 hover:border-[#d8b778]/70 hover:text-[#e9c983]"
             )}
             aria-current={i === step ? "step" : undefined}
           >
@@ -23,7 +23,7 @@ export default function Stepper({ steps, step, onGo, validFlags }) {
             <span className="ml-1">{s.label}</span>
           </button>
           {i < steps.length - 1 && (
-            <span className="mx-2 text-gray-300">›</span>
+            <span className="mx-1 md:mx-2 text-stone-500">/</span>
           )}
         </li>
       ))}

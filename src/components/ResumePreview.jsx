@@ -10,15 +10,17 @@ function range(a, b) {
 export default function ResumePreview({ data }) {
   const p = data.personal;
   return (
-    <div className="border border-gray-200 rounded-2xl p-6">
-      <div className="text-2xl font-semibold">{p.fullName || "Your Name"}</div>
-      <div className="text-sm text-gray-600 mt-1">
+    <div className="resume-sheet p-7 md:p-10">
+      <div className="eyebrow !text-[#9f7938]">Curriculum vitae</div>
+      <div className="brand-serif text-3xl font-semibold mt-2 tracking-tight">{p.fullName || "Your Name"}</div>
+      <div className="text-sm text-slate-600 mt-2">
         {[p.location, p.phone, p.email, p.website].filter(Boolean).join(" · ")}
       </div>
 
       {data.summary.about && (
         <section className="mt-6">
-          <h3 className="text-lg font-semibold">Summary</h3>
+          <h3 className="brand-serif text-xl font-semibold">Summary</h3>
+          <div className="resume-rule mt-2" />
           <p className="mt-2 leading-relaxed whitespace-pre-line">
             {data.summary.about}
           </p>
@@ -27,7 +29,8 @@ export default function ResumePreview({ data }) {
 
       {!!data.experience?.length && (
         <section className="mt-6">
-          <h3 className="text-lg font-semibold">Experience</h3>
+          <h3 className="brand-serif text-xl font-semibold">Experience</h3>
+          <div className="resume-rule mt-2" />
           <div className="mt-2 space-y-4">
             {data.experience.map((e, i) => (
               <div key={i}>
@@ -50,7 +53,8 @@ export default function ResumePreview({ data }) {
 
       {!!data.education?.length && (
         <section className="mt-6">
-          <h3 className="text-lg font-semibold">Education</h3>
+          <h3 className="brand-serif text-xl font-semibold">Education</h3>
+          <div className="resume-rule mt-2" />
           <div className="mt-2 space-y-2">
             {data.education.map((ed, i) => (
               <div key={i}>
@@ -69,7 +73,8 @@ export default function ResumePreview({ data }) {
 
       {(data.skills.core?.length || data.skills.tools?.length) ? (
         <section className="mt-6">
-          <h3 className="text-lg font-semibold">Skills</h3>
+          <h3 className="brand-serif text-xl font-semibold">Skills</h3>
+          <div className="resume-rule mt-2" />
           <div className="mt-2">
             {!!data.skills.core?.length && (
               <div>

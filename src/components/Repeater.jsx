@@ -16,26 +16,26 @@ export default function Repeater({ items = [], onChange, emptyItem, render }) {
   return (
     <div className="space-y-4">
       {(items || []).map((item, i) => (
-        <div key={i} className="border border-gray-200 rounded-2xl p-4">
+        <div key={i} className="border border-stone-300/15 bg-black/10 rounded-xl p-4 md:p-5">
           <div className="flex justify-between items-center mb-3">
-            <div className="text-sm text-gray-600">Entry {i + 1}</div>
+            <div className="eyebrow">Entry {String(i + 1).padStart(2, "0")}</div>
             <div className="flex gap-2">
               <button
-                className="px-2 py-1 rounded-lg border"
+                className="lux-icon-button px-2.5 py-1.5"
                 onClick={() => move(i, Math.max(0, i - 1))}
                 disabled={i === 0}
               >
                 ↑
               </button>
               <button
-                className="px-2 py-1 rounded-lg border"
+                className="lux-icon-button px-2.5 py-1.5"
                 onClick={() => move(i, Math.min(items.length - 1, i + 1))}
                 disabled={i === items.length - 1}
               >
                 ↓
               </button>
               <button
-                className="px-2 py-1 rounded-lg border text-red-600"
+                className="lux-icon-button px-2.5 py-1.5 text-rose-300"
                 onClick={() => remove(i)}
               >
                 Delete
@@ -49,7 +49,7 @@ export default function Repeater({ items = [], onChange, emptyItem, render }) {
         </div>
       ))}
 
-      <button className="px-3 py-2 rounded-xl border border-purple-300 bg-purple-200" onClick={add}>
+      <button className="lux-button-secondary px-4 py-2.5" onClick={add}>
         Add another
       </button>
     </div>

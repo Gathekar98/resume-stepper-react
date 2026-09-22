@@ -7,13 +7,13 @@ export default function PreviewStep({ data, onDownloadHTML, onClearAll }) {
     <Section title="Preview" subtitle="Review your resume below.">
       <ResumePreview data={data} />
       <div className="flex flex-wrap gap-3 mt-6">
-        <button className="px-4 py-2 rounded-xl bg-black text-white" onClick={onDownloadHTML}>
+        <button className="lux-button px-5 py-2.5" onClick={onDownloadHTML}>
           Download HTML
         </button>
-        <button className="px-4 py-2 rounded-xl border" onClick={() => window.print()}>
+        <button className="lux-button-secondary px-5 py-2.5" onClick={() => window.print()}>
           Print
         </button>
-        <button className="px-4 py-2 rounded-xl border" onClick={onClearAll}>
+        <button className="lux-button-quiet px-5 py-2.5 text-rose-200" onClick={onClearAll}>
           Clear all
         </button>
       </div>
